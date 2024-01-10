@@ -2,7 +2,7 @@ import os
 # os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 import sys
 from typing import List
-from MATH.dataset_zf import MATHCHATFILEDataset
+from dataset import MATHCHATFILEZFDataset
 
 import fire
 import torch
@@ -13,7 +13,7 @@ assert (
     "LlamaTokenizer" in transformers._import_structure["models.llama"]
 ), "LLaMA is now in HuggingFace's main branch.\nPlease reinstall it: pip uninstall transformers && pip install git+https://github.com/huggingface/transformers.git"
 from transformers import LlamaForCausalLM, LlamaTokenizer
-from peft_NAT import (
+from code.peft_NAT import (
     prepare_model_for_int8_training,
     LoraConfig,
     get_peft_model,
@@ -163,17 +163,9 @@ def train(
     model.print_trainable_parameters()  # Be more transparent about the % of trainable params.
 
     if val_set_size > 0:
-        exit()
-    #     train_val = data["train"].train_test_split(
-    #         test_size=val_set_size, shuffle=True, seed=42
-    #     )
-    #     train_data = train_val["train"].shuffle().map(generate_and_tokenize_prompt)
-    #     val_data = train_val["test"].shuffle().map(generate_and_tokenize_prompt)
+        pass
     else:
-        # train_data = data["train"].shuffle().map(generate_and_tokenize_prompt)
-        # train_examples = get_examples(data_path + '/train_turbo_greedy.jsonl')
-        train_data = MATHCHATFILEDataset(tokenizer, data_path + '/*/*',stage=stage)
-        #train_data = MATHCHATDataset(tokenizer, data_path)
+        train_data = MATHCHATFILEZFDataset(tokenizer, data_path + '/*/*',stage=stage)
         val_data = None
 
     trainer = transformers.Trainer(

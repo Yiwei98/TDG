@@ -1,10 +1,9 @@
 # Turning Dust into Gold [AAAI 2024]
 
-
 ![img.png](img.png)
 ## 
 This is the repo for AAAI 2024 paper: Turning Dust into Gold: Distilling Complex Reasoning Capabilities from LLMs by
-Leveraging Negative Data.
+Leveraging Negative Data. [[Arxiv](https://arxiv.org/abs/2312.12832)]
 
 The repo contains:
 - The synthetic data from ChatGPT and GPT4.
@@ -23,7 +22,7 @@ The demonstrations for generating rationales are in our paper.
 The training and inference code are as follows:
 
 ### step1:
-prepare llama-7b checkpoint and store it in the main directory
+prepare llama-7b checkpoint and store it in the code directory
 
 ### step2:
 prepare conda environment with requirements.txt
@@ -33,6 +32,8 @@ prepare conda environment with requirements.txt
 
 ### step4:
 training LoRA-neg
+> cd code
+>
 > bash run_neg.sh
 
 ### step5:

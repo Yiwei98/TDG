@@ -141,34 +141,12 @@ class Distill(nn.Module):
         pos_log_outputs = F.log_softmax(pos_teacher_pred / self.T, dim=-1)
         pos_outputs = F.softmax(pos_teacher_pred / self.T, dim=-1) + 10 ** (-7)
         neg_outputs = F.softmax(neg_teacher_pred / self.T, dim=-1) + 10 ** (-7)
-        # print('KL DIS', ((F.kl_div(pos_outputs, neg_outputs, reduction='none') * attention_mask.unsqueeze(-1)).sum(-1).sum(-1) / attention_mask.sum(-1))[0].item())
-        # print('tanh', torch.tanh((F.kl_div(pos_outputs, neg_outputs, reduction='none') * attention_mask.unsqueeze(-1)).sum(-1).sum(-1) / attention_mask.sum(-1))[0].item())
-        #print((pos_outputs-neg_outputs)>1)
-        #print("!!!")
-        #loss_kd = - self.T * self.T * pred * pos_outputs * (1. +((pos_outputs+neg_outputs)>0.5))
-        #print((0.+(((pos_outputs+neg_outputs)* attention_mask.unsqueeze(-1))>1)).sum())
         beta = torch.tanh((F.kl_div(pos_log_outputs, neg_outputs, reduction='none') * attention_mask.unsqueeze(-1)).sum(-1).sum(-1) / attention_mask.sum(-1))
         print(ques)
-        with open("/mnt/public03/usr/liyiwei/math_gpt4/log_beta.txt","a")as f:
-            f.write(str(beta[0].item()))
-            #f.write("/n"+ques[0]+"/n/n")
-            f.close()
-        '''
-        print("beta")
-        print(beta)
-        print(beta.size())
-        print("pos_outputs")
-        print(pos_outputs.size())
-        print("pred")
-        print(pred.size())
-        '''
+
         loss_kd = - self.T * self.T * pred * pos_outputs * (0.5 +  beta.unsqueeze(-1).unsqueeze(-1))
-        # loss_kd = (loss_kd * attention_mask.unsqueeze(-1)).sum()
         loss_kd = (loss_kd * attention_mask.unsqueeze(-1)).sum() / attention_mask.sum()
-        # loss_kd = self.T * self.T * nn.KLDivLoss(reduction='none')(output_batch, teacher_outputs).sum()
-        #print("ce_loss:{}   kd_loss:{}".format(loss_ce.item(),loss_kd.item()))
         student_outputs["loss"] = (1 - self.alpha) * loss_ce + self.alpha * loss_kd
-        # student_outputs["loss"] = loss_ce
         return student_outputs
 
 def load_model(base_model, lora_path, config, device_map):
@@ -300,15 +278,8 @@ def train(
     resume_from_checkpoint = False
 
     if val_set_size > 0:
-        exit()
-    #     train_val = data["train"].train_test_split(
-    #         test_size=val_set_size, shuffle=True, seed=42
-    #     )
-    #     train_data = train_val["train"].shuffle().map(generate_and_tokenize_prompt)
-    #     val_data = train_val["test"].shuffle().map(generate_and_tokenize_prompt)
+        pass
     else:
-        # train_data = data["train"].shuffle().map(generate_and_tokenize_prompt)
-        # train_examples = get_examples(data_path + '/train_turbo_greedy.jsonl')
         train_data = MATHCHATFILEDataset(tokenizer, data_path + '/*/*')
         val_data = None
 

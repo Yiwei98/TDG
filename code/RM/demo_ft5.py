@@ -17,32 +17,31 @@ for batch_size in [1]:
     for seed in [0]:
         # 参数区
         resume_dir = "MATH/flan-t5-xl_datamodel-ChatGPT_seed1_bs1"
-        lr = 2e-5 #5e-5
+        lr = 2e-5
         lr_decay = 0.02
         epoch = 5
         # seed = 2
         devicenum = 7
         # batch_size = 3
         max_length = 512
-        hard_neg_bili = 0 #效果不明显，可设为0
-        hard_pos_bili = 1 #设为1最好
-        train_num = -1  #-1为使用所有训练数据训练，如果想快速实践改后的模型有没有明显问题，可以设置为3000快速跑一下试试
+        hard_neg_bili = 0
+        hard_pos_bili = 1
+        train_num = -1
         torch.manual_seed(seed)
         torch.cuda.manual_seed(seed)
         random.seed(seed)
         numpy.random.seed(seed)
         random.seed(seed)
         os.environ['PYTHONHASHSEED'] = str(seed)
-        # eval集组成，如果未来信息可见，则为"c_r_c"，若不可见则为"c_r", "c_r_c"经测试无效
-        bert_name = "google/flan-t5-xxl"#"bert-large-uncased"
-        data_model = "gpt4_train"#"ChatGPT" #"GPT4"
-        pre_train_model_name = "flan-t5-xl"#"google/flan-t5-large"#"flan-t5-xl"#"bert-large-uncased"
-        hs = 2048#1024#2048
+
+        bert_name = "google/flan-t5-xxl"
+        data_model = "gpt4_train"
+        pre_train_model_name = "flan-t5-xl"
+        hs = 2048
         pre_train_model_dir = pre_train_model_name
         device = torch.device("cuda" + ":" + str(devicenum) if torch.cuda.is_available() else "cpu")
         to_train = True
         train_list = ["daily"]
-        # train_list = ["persona", "empa", "topical"]
         eval_list = ["fed-addrank.json", "engage-addrank.json", "convai2_grade_bert_ranker-addrank.json",
                     "convai2_grade_dialogGPT-addrank.json",
                     "topicalchat_usr-addrank.json", "personachat_usr-addrank.json",
@@ -149,27 +148,7 @@ for batch_size in [1]:
                             # f.write("train params:\n")
                             # f.write("lr={}\nepoch={}\npre-train model={}\n".format(lr, epoch, pre_train_model_dir))
                             f.write("\ncur loss:{}\n".format(valid_loss))
-                    # if epoch_i % 10 == 0 and epoch_i != epoch:
-                    #     eval_func(model, eval_list, eval_dstc10_list, check_list, device, output_dir, tokenizer,
-                    #             reload_best_model=False, epoch_name=str(epoch_i))
                 with open(output_dir + "/result.txt", "a") as f:
                     f.write("train params:\n")
                     f.write("lr={}\nepoch={}\npre-train model={}\n".format(lr, epoch, pre_train_model_dir))
                     f.write("\nbest acc:{}\n".format(max_acc))
-
-            # model.load_checkpoint(output_dir + "/model.pth", device)
-            # 用第40个epoch的模型最终评测
-            # eval_func(model, eval_list, eval_dstc10_list, check_list, device, output_dir, tokenizer, False)
-        # # 测试模型鲁棒性，需要robust_data.txt，该数据集由dstc10前三个数据集组成
-        # valid_dataset = SimDataset(tokenizer, "dstc10_eval_data/robust_data.txt", max_length)
-        # neg_sampler.bili = 0
-        # robust_dataloader = DataLoader(valid_dataset, sampler=valid_data_sampler, batch_size=batch_size,
-        #                             collate_fn=RobustDataCollator(tokenizer, max_length, neg_sampler=neg_sampler,
-        #                                                             pos_bili=hard_pos_bili))
-        # eval_robust(model, robust_dataloader, device, output_dir)
-        # with open(output_dir + "/density.txt", "w") as f:
-        #     for i in range(len(model.density_sum)):
-        #         f.write(str(model.density_sum[i]) + "\n")
-        #     f.close()
-        # with open(output_dir + "/result.txt", "a") as f:
-        #     f.write("\ntrain score bias of average:{}\n".format(model.get_density_bias()))

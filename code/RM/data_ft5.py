@@ -531,31 +531,3 @@ class RobustDataCollator:
                 c_r_mask.append(tem4_false_)
             cur_index += num
         return new_sent_features,labels,pos_pair,c_r_mask
-# # 检验simcse data loader及collector
-# tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
-# dataset = SimDataset(tokenizer,"raw_data/dialogues_text.txt",128)
-# data_sampler = RandomSampler(dataset)
-# train_dataloader = DataLoader(dataset, sampler=data_sampler, batch_size=16,
-#                               collate_fn=SimcseDataCollator(tokenizer,128,batch_form = "c_r"))
-# for step, batch in enumerate(train_dataloader):
-#     for i in range(16):
-#         print(batch.data['attention_mask'][i])
-#         print(batch.data['special_tokens_mask'][i])
-#     for i in range(16):
-#         print(batch.data['input_ids'][i])
-#     print("!!!!!!")
-
-
-# # 检验simcse data loader及collector
-# tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
-# dataset = EvalDataset(tokenizer,"eval_data/dailydialog_grade_transformer_generator_with_fut_his.json",128,"c_r_c")
-# data_sampler = RandomSampler(dataset)
-# train_dataloader = DataLoader(dataset, sampler=data_sampler, batch_size=16,
-#                               collate_fn=EvalDataCollator(tokenizer,128,batch_form = "c_r_c"))
-# for step, batch in enumerate(train_dataloader):
-#     for i in range(16):
-#         print(batch.data['attention_mask'][i])
-#         print(batch.data['special_tokens_mask'][i])
-#     for i in range(16):
-#         print(batch.data['input_ids'][i])
-#     print("!!!!!!")

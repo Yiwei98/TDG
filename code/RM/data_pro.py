@@ -95,15 +95,7 @@ def find_math_answer(s):
 cw_score,zq_score,cw_score_,zq_score_ = 0,0,0,0
 all_num , all_right_num =0,0
 count_ = 0
-# all_data = []
-# for i in range(7):
-#     all_cate = ["counting_and_probability", "intermediate_algebra", "number_theory", "precalculus", "prealgebra",
-#                 "geometry", "algebra"]
-#     cate = all_cate[i]
-#     with open("GPT4-MATH/PHP-8_train_gpt4_{}_8.json".format(cate), "r") as f:
-#         l = json.load(f)
-#         f.close()
-#     all_data+=l
+
 import json
 all_cate = ["counting_and_probability","intermediate_algebra","number_theory","precalculus","prealgebra","geometry","algebra"]
 all_data = {}
@@ -113,14 +105,7 @@ for tem in all_cate:
                 data = json.loads(line)
                 all_data[data["question"]] = data
         f.close()
-    # with open("best-llama-train/train_{}_n16_2.jsonl".format(tem),"r")as f:
-    #     for line in f:
-    #             data = json.loads(line)
-    #             if data["question"] in all_data.keys():
-    #                 all_data[data["question"]]['generated_answer']+=data['generated_answer']
-    #             else:
-    #                 all_data[data["question"]] = data
-    #     f.close()
+
 for tem in all_cate:
     with open("gpt4_train_nat/train_{}_n16_1.jsonl".format(tem),"r")as f:
          for line in f:
