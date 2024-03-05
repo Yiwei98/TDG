@@ -26,7 +26,7 @@ from peft import (
     set_peft_model_state_dict,
 )
 
-from peft8 import (
+from peft_NAT import (
     prepare_model_for_int8_training as prepare_model_for_int8_training2,
     get_peft_model as get_peft_model2,
     get_peft_model_state_dict as get_peft_model_state_dict2,

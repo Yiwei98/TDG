@@ -54,7 +54,7 @@ def train(
     # model/data params
     stage=2,
     base_model: str = "llama-7b-hf-converted",  # the only required argument
-    data_path: str = "MATH_ChatGPT_8_t0.5",
+    data_path: str = "GPT3.5-turbo-MATH",
     output_dir: str = "./lora-alpaca",
     # training hyperparams
     batch_size: int = 128,
